@@ -1,0 +1,3 @@
+# Project exclude paths
+/target/
+/vue/node_modules/
