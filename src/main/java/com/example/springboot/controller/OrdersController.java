@@ -60,7 +60,7 @@ public class OrdersController {
     @PostMapping("/addOrder")
     public Result addOrder(@RequestBody List<Cart> carts) {
        ordersService.addOrder(carts);
-        return Result.success();
+       return Result.success();
     }
 
     @PostMapping("/status")

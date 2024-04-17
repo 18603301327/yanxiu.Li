@@ -7,15 +7,17 @@
       </div>
       <div style="margin-left: 10px; flex: 1">
         <el-card>
-          <el-form label-width="100px">
-            <el-form-item label="门票名称">{{ goods.name }}</el-form-item>
-            <el-form-item label="门票编码"><span>{{ goods.code }}</span></el-form-item>
-            <el-form-item label="门票描述">{{ goods.descpription }}</el-form-item>
-            <el-form-item label="门票价格"><span style="color: red">￥{{ goods.price }}</span></el-form-item>
-            <el-form-item label="活动价"><span style="color: red;font-weight: bold">￥{{ goods.discount }}</span></el-form-item>
-            <el-form-item label="门票库存"><span>{{ goods.nums }}</span></el-form-item>
-            <el-form-item label="门票日期"><span>{{ goods.date }}</span></el-form-item>
-
+          <el-form label-width="100px" >
+            <el-form-item label="门票名称:">{{ goods.name }}</el-form-item>
+            <el-form-item label="门票编码:"><span>{{ goods.code }}</span></el-form-item>
+            <el-form-item label="门票描述:">{{ goods.descpription }}</el-form-item>
+            <el-form-item label="门票价格:"><span style="color: red">￥{{ goods.price }}</span></el-form-item>
+            <el-form-item label="活动价:"><span style="color: red;font-weight: bold">￥{{ goods.discount }}</span></el-form-item>
+            <el-form-item label="门票库存:"><span>{{ goods.nums }}</span></el-form-item>
+            <el-form-item label="售卖日期:"><span>{{ goods.startTime }} 至 {{goods.endTime}}</span></el-form-item>
+            <el-form-item label="门票日期:" prop="selectDate" >
+              <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="selectDate"></el-date-picker>
+            </el-form-item >
             <div>
               <el-input-number :value="1" size="medium" :min="1" style="width: 150px; margin-left: 30px" v-model="buyNum"></el-input-number>
               <el-button style="background: red; font-size: 16px; color: white; padding: 10px; margin-left: 5px" @click="addCart">立即购买</el-button>
@@ -123,6 +125,7 @@ export default {
       goods: {},
       goodsId: goodsId,
       buyNum: 1,
+      selectDate: '',
       comments: [],
       dialogFormVisible: false,
       address: [],
@@ -141,7 +144,12 @@ export default {
           lat: 29.983259
         }
       ],
-      end: ''
+      end: '',
+      rules: {
+        selectDate: [
+          { type: 'date', required: true, message: '请选择日期', trigger: 'blur'}
+        ],
+      },
     }
   },
   created() {
@@ -224,14 +232,28 @@ export default {
       this.dialogFormVisible = true
     },
     addCart() {
-      this.request.post('/orders/addOrder?addressid=' + this.addressid, [{ goodsId: this.goodsId, goodName: this.goods.name, price: this.goods.discount, num: this.buyNum, userid:this.user.id, img: this.goods.img }]).then(res => {
-        if (res.code === '200') {
-          this.$message.success('下单成功')
-          this.dialogFormVisible = false
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      if(this.selectDate === ""){
+        this.$message.error("请选择门票日期")
+      }
+      else{
+        this.request.post('/orders/addOrder?addressid=' + this.addressid, [{
+          goodsId: this.goodsId,
+          goodName: this.goods.name,
+          price: this.goods.discount,
+          num: this.buyNum,
+          userid: this.user.id,
+          img: this.goods.img,
+          selectDate: this.selectDate
+        }]).then(res => {
+          if (res.code === '200') {
+            this.$message.success('下单成功')
+            this.dialogFormVisible = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+
     }
   }
 }
