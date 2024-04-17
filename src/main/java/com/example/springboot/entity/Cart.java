@@ -41,8 +41,7 @@ public class Cart implements Serializable {
     @ApiModelProperty("用户id")
     @Alias("用户id")
     private Integer userid;
-    @TableField(exist = false)
-    private String selectDate;
+
     @TableField(exist = false)
     private String goodName;
     @TableField(exist = false)

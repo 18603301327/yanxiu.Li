@@ -39,8 +39,6 @@
       <el-table-column prop="date" label="添加时间"></el-table-column>
       <el-table-column label="图片"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image></template></el-table-column>
       <el-table-column prop="descpription" label="描述"></el-table-column>
-      <el-table-column prop="startTime" label="开始时间"></el-table-column>
-      <el-table-column prop="endTime" label="结束时间"></el-table-column>
       <el-table-column prop="status" label="上架状态">
       <template v-slot="scope">
       <el-switch v-model="scope.row.status" active-color="lightgreen" @change="changeStatus(scope.row)"></el-switch>
@@ -78,7 +76,6 @@
       </el-pagination>
     </div>
 
-<!--    弹出框-->
     <el-dialog title="信息" :visible.sync="dialogFormVisible" width="40%" :close-on-click-modal="false">
       <el-form label-width="140px" size="small" style="width: 85%;" :model="form" :rules="rules" ref="ruleForm">
         <el-form-item prop="name" label="名称">
@@ -106,21 +103,9 @@
         <el-form-item prop="nums" label="库存">
           <el-input v-model="form.nums" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item prop="ticketTime" label="门票时间">
-          <el-date-picker
-              @change="dateFormat"
-              v-model="form.ticketTime"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item >
         <el-form-item prop="date" label="添加时间">
           <el-date-picker value-format="yyyy-MM-dd" v-model="form.date"></el-date-picker>
-        </el-form-item >
-
+        </el-form-item>
 <!--        <el-form-item prop="lng" label="经度">-->
 <!--          <el-input v-model="form.lng" autocomplete="off"></el-input>-->
 <!--        </el-form-item>-->
@@ -161,14 +146,6 @@ export default {
   created() {
     this.load()
   },
-  // mounted() {
-  //   //时间回显处理
-  //   let tmpArr = []
-  //   tmpArr.push(new Date(this.startTime))
-  //   tmpArr.push(new Date(this.endTime))
-  //   // console.log('转成啥', tmpArr)
-  //   this.BAE_Time = tmpArr
-  // }
   methods: {
     changeRecommend(row) {
       this.form = JSON.parse(JSON.stringify(row))
@@ -207,13 +184,8 @@ export default {
         this.category = res.data
       })
     },
-    dateFormat(picker) {
-      this.form.startTime = picker[0].toString()
-      this.form.endTime = picker[1].toString()
-    },
     save() {
         this.$refs['ruleForm'].validate((valid) => {
-          console.log(this.form)
           if (valid) {
             this.request.post("/goods", this.form).then(res => {
               if (res.code === '200') {
@@ -241,10 +213,6 @@ export default {
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
-      let tmpArr = []
-      tmpArr.push(new Date(row.startTime))
-      tmpArr.push(new Date(row.endTime))
-      this.form.ticketTime = tmpArr
       this.dialogFormVisible = true
        this.$nextTick(() => {
          if(this.$refs.img) {
@@ -255,7 +223,6 @@ export default {
          }
        })
     },
-
     del(id) {
       this.request.delete("/goods/" + id).then(res => {
         if (res.code === '200') {

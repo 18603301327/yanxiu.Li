@@ -64,15 +64,10 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             if (goods.getNums() < cart.getNum()) {
                 throw new ServiceException("-1", "库存不足");
             }
-            if (cart.getSelectDate().compareTo(goods.getStartTime()) == -1 || cart.getSelectDate().compareTo(goods.getEndTime()) == 1){
-                throw new ServiceException("-1", "日期不在范围内");
-            }
-            if (cart.getSelectDate().isEmpty()){
-                throw new ServiceException("-1", "日期不能为空");
-            }
             goods.setNums(goods.getNums() - cart.getNum());
             goods.setSales(goods.getSales() + 1);
             goodsService.updateById(goods);
+
             OrderItem orderItem = new OrderItem();
             orderItem.setCategory(goods.getCategory());
             orderItem.setOrderId(orders.getId());
@@ -81,7 +76,6 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             orderItem.setImg(cart.getImg());
             orderItem.setNum(cart.getNum());
             orderItem.setGoodsId(cart.getGoodsId());
-            orderItem.setSelectDate(cart.getSelectDate());
             orderItemService.save(orderItem);
         }
     }

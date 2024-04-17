@@ -68,7 +68,6 @@ public class GoodsController {
             goods.setCode("G-" + RandomUtil.randomNumbers(8));
             goods.setUserid(currentUser.getId());
         }
-        System.out.println(goods);
         goodsService.saveOrUpdate(goods);
         return Result.success();
     }

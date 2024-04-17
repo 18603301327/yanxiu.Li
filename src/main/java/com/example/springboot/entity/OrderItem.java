@@ -53,6 +53,6 @@ public class OrderItem implements Serializable {
     private String comment;
     private Double scores;
     private String category;
-    private String selectDate;
+
 
 }

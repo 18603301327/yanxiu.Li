@@ -70,10 +70,6 @@ public class Goods implements Serializable {
     private String lng;
     private String lat;
     private Integer sales;
-//    @TableField(exist = false)
-//    private String ticketTime;
-    private String startTime;
-    private String endTime;
 
 
 }
